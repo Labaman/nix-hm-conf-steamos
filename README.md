@@ -1,4 +1,4 @@
-# nix-hm-conf-steamdeck
+# Nix Home Manager Config for Steam Deck
 
 **English** | [Русский](README.ru.md)
 
