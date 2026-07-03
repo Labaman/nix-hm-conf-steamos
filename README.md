@@ -1,4 +1,4 @@
-# Nix Home Manager Config for Steam Deck
+# Nix Home Manager Config for SteamOS
 
 **English** | [Русский](README.ru.md)
 
