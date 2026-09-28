@@ -28,7 +28,7 @@ curl -sSfL https://artifacts.nixos.org/nix-installer | sh -s -- install --enable
 Затем:
 
 ```bash
-git clone https://github.com/Labaman/nix-hm-conf-steamdeck ~/.config/home-manager
+git clone https://github.com/Labaman/nix-hm-conf-steamos ~/.config/home-manager
 home-manager switch --flake ~/.config/home-manager#deck
 ```
 
