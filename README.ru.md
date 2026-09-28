@@ -12,7 +12,7 @@ Nix — один из официально поддерживаемых спос
 |-------------|----------|
 | Порядок XDG_DATA_DIRS | Flatpak остаётся первым в меню KDE — без этого вместо Flatpak-приложений (Firefox и др.) открывается системный стаб «Install Firefox» (HM [#8076](https://github.com/nix-community/home-manager/issues/8076) / [#9356](https://github.com/nix-community/home-manager/pull/9356)) |
 | Обновление меню KDE | Иконки Nix-приложений появляются в лаунчере сразу после `switch`, без перезахода в сессию (при первом switch иконки могут быть пустыми, но приложения запускаются). Также предотвращает исчезновение системных приложений из меню. |
-| nixGL | Обёртки GPU-драйверов для Nix GUI-приложений (OpenGL + Vulkan/RADV) |
+| GPU для Nix GUI-приложений | `targets.genericLinux.gpu`: драйверы mesa (OpenGL + Vulkan/RADV) через `/run/opengl-driver`, без обёрток на приложения; `nix-gpu-setup` сохраняет настройку при обновлениях SteamOS |
 | Нативный Wayland для Nix-GUI-приложений | `NIXOS_OZONE_WL` + `QT_QPA_PLATFORM` для Electron/Qt-приложений |
 | EmuDeck / rustup | Изменяемый `~/.gitconfig` рядом с управляемым HM git-конфигом |
 | Строка приглашения оболочки (Starship) | Единый вид для bash, zsh и fish в стиле дефолтного SteamOS: `(user@host dir) [ветка*]$` |
@@ -30,6 +30,12 @@ curl -sSfL https://artifacts.nixos.org/nix-installer | sh -s -- install --enable
 ```bash
 git clone https://github.com/Labaman/nix-hm-conf-steamdeck ~/.config/home-manager
 home-manager switch --flake ~/.config/home-manager#deck
+```
+
+Настроить GPU-драйверы для Nix GUI-приложений (спросит пароль sudo; перезапускать, когда `switch` предупреждает, что драйверы требуют обновления):
+
+```bash
+nix-gpu-setup
 ```
 
 Свои пакеты и программы добавляй внутри `home.nix` ниже соответствующего комментария.
