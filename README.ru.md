@@ -29,8 +29,10 @@ curl -sSfL https://artifacts.nixos.org/nix-installer | sh -s -- install --enable
 
 ```bash
 git clone https://github.com/Labaman/nix-hm-conf-steamos ~/.config/home-manager
-home-manager switch --flake ~/.config/home-manager#deck
+nix run home-manager/master -- switch
 ```
+
+Первый запуск берёт Home Manager прямо с GitHub через `nix run` — отдельно ставить его не нужно. После этого команда `home-manager` уже есть в профиле, и дальше достаточно `home-manager switch`.
 
 Настроить GPU-драйверы для Nix GUI-приложений (спросит пароль sudo; перезапускать, когда `switch` предупреждает, что драйверы требуют обновления):
 
