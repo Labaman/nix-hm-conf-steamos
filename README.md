@@ -4,7 +4,7 @@
 
 Nix is one of the officially supported ways to install additional software on SteamOS (available since version 3.5). Packages and settings installed via Nix survive SteamOS updates — making it a solid alternative to Flatpak, Distrobox, and Homebrew.
 
-This repository is a minimal [Home Manager](https://github.com/nix-community/home-manager) base config for SteamOS. It accounts for the quirks of running Nix on Steam Deck and includes fixes for the main issues that can break the system or apps installed outside of Nix.
+This repository is a minimal [Home Manager](https://github.com/nix-community/home-manager) base config for SteamOS. It accounts for the quirks of running Nix on SteamOS and includes fixes for the main issues that can break the system or apps installed outside of Nix.
 
 ## Features
 
@@ -19,7 +19,7 @@ This repository is a minimal [Home Manager](https://github.com/nix-community/hom
 
 ## Usage
 
-Install Nix if not already installed ([NixOS/nix-installer](https://github.com/NixOS/nix-installer), auto-detects SteamOS):
+Install Nix if not already installed. The official installer [NixOS/nix-installer](https://github.com/NixOS/nix-installer) is recommended — it detects SteamOS automatically and does the necessary initial setup:
 
 ```bash
 curl -sSfL https://artifacts.nixos.org/nix-installer | sh -s -- install --enable-flakes
@@ -32,7 +32,7 @@ git clone https://github.com/Labaman/nix-hm-conf-steamos ~/.config/home-manager
 nix run home-manager/master -- switch
 ```
 
-The first run takes Home Manager straight from GitHub via `nix run` — no separate install needed. After that the `home-manager` command is in your profile, so later runs are just `home-manager switch`.
+The first Home Manager run has to go through a one-off `nix run` — no separate install needed. It installs Home Manager into your profile, so the `home-manager` command stays available from then on. After that, just run `home-manager switch` whenever you change the config.
 
 Set up GPU drivers for Nix GUI apps (asks for the sudo password; re-run it when `switch` warns that GPU drivers require an update):
 
@@ -44,7 +44,7 @@ Add your own packages and programs below the comment at the bottom of `home.nix`
 
 ## Updating & maintenance
 
-**Updating programs.** All packages come from the pinned inputs (nixpkgs + Home Manager) in `flake.lock`, so updating your programs means bumping those inputs and re-applying:
+**Updating programs.** All packages come from the pinned sources (`inputs`: nixpkgs + Home Manager) in `flake.lock`, so updating your apps means bringing those sources up to date and applying the new config:
 
 ```bash
 cd ~/.config/home-manager
@@ -66,7 +66,7 @@ nix-collect-garbage --delete-older-than 7d   # remove old profile generations + 
 nix store optimise                           # deduplicate the store with hard links
 ```
 
-To wipe everything unreferenced (keep only the current generation), use `nix-collect-garbage -d`.
+To clean up everything stale (keeping only the current generation), use `nix-collect-garbage -d`.
 
 ### Uninstalling
 
