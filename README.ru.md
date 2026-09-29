@@ -42,6 +42,54 @@ nix-gpu-setup
 
 Свои пакеты и программы добавляй внутри `home.nix` ниже соответствующего комментария.
 
+## Обновление и обслуживание
+
+**Обновление программ.** Все пакеты берутся из зафиксированных входов (nixpkgs + Home Manager) в `flake.lock`, поэтому обновить программы — значит поднять эти входы и переприменить конфиг:
+
+```bash
+cd ~/.config/home-manager
+nix flake update      # поднять nixpkgs + home-manager до свежего коммита
+home-manager switch   # пересобрать и активировать обновлённые программы
+```
+
+Посмотреть поколения (для отката — активировать предыдущее):
+
+```bash
+home-manager generations
+```
+
+Освободить место — старые поколения хранятся до удаления, а каждый `switch` добавляет новое:
+
+```bash
+home-manager expire-generations "-7 days"   # удалить поколения Home Manager старше 7 дней
+nix-collect-garbage --delete-older-than 7d   # удалить старые поколения профиля + несвязанные пути store
+nix store optimise                           # дедуп store через хардлинки
+```
+
+Снести всё несвязанное (оставив только текущее поколение) — `nix-collect-garbage -d`.
+
+### Удаление
+
+Сначала удали Home Manager — управляемые им файлы в домашнем каталоге являются симлинками в Nix store и иначе останутся битыми:
+
+```bash
+home-manager uninstall
+```
+
+Затем удали сам Nix деинсталлятором установщика — см. [NixOS/nix-installer → Uninstalling](https://github.com/NixOS/nix-installer#uninstalling):
+
+```bash
+/nix/nix-installer uninstall
+```
+
+`nix-gpu-setup` оставил два файла в `/etc` — удали и их:
+
+```bash
+sudo rm /etc/tmpfiles.d/non-nixos-gpu.conf /etc/atomic-update.conf.d/non-nixos-gpu.conf
+```
+
+Если ты сменил логин-шелл на zsh или fish, он продолжит работать — это системные бинарники.
+
 ## Оболочка
 
 Управляемая оболочка нужна, чтобы переменные сессии (фиксы выше) попадали в графическую сессию. Раскомментируй один из блоков в `home.nix`.
@@ -59,12 +107,12 @@ nix-gpu-setup
 
 Переключиться на **zsh**:
 ```bash
-chsh -s /usr/bin/zsh
+chsh -s /bin/zsh
 ```
 
 Переключиться на **fish**:
 ```bash
-chsh -s /usr/bin/fish
+chsh -s /bin/fish
 ```
 
 Сделай это **до** запуска `home-manager switch` с включённым модулем оболочки. После перезахода в сессию раскомментируй соответствующий блок в `home.nix`.

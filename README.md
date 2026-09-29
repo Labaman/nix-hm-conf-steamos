@@ -42,6 +42,54 @@ nix-gpu-setup
 
 Add your own packages and programs below the comment at the bottom of `home.nix`.
 
+## Updating & maintenance
+
+**Updating programs.** All packages come from the pinned inputs (nixpkgs + Home Manager) in `flake.lock`, so updating your programs means bumping those inputs and re-applying:
+
+```bash
+cd ~/.config/home-manager
+nix flake update      # bump nixpkgs + home-manager to the latest commit
+home-manager switch   # rebuild and activate the updated programs
+```
+
+List generations (to roll back, activate an earlier one):
+
+```bash
+home-manager generations
+```
+
+Free up disk space — old generations stay until removed, and every `switch` adds one:
+
+```bash
+home-manager expire-generations "-7 days"   # drop Home Manager generations older than 7 days
+nix-collect-garbage --delete-older-than 7d   # remove old profile generations + unreferenced store paths
+nix store optimise                           # deduplicate the store with hard links
+```
+
+To wipe everything unreferenced (keep only the current generation), use `nix-collect-garbage -d`.
+
+### Uninstalling
+
+Remove Home Manager first — the files it manages in your home directory are symlinks into the Nix store and would be left dangling otherwise:
+
+```bash
+home-manager uninstall
+```
+
+Then remove Nix itself with the installer's uninstaller — see [NixOS/nix-installer → Uninstalling](https://github.com/NixOS/nix-installer#uninstalling):
+
+```bash
+/nix/nix-installer uninstall
+```
+
+`nix-gpu-setup` also left two files in `/etc`; remove them too:
+
+```bash
+sudo rm /etc/tmpfiles.d/non-nixos-gpu.conf /etc/atomic-update.conf.d/non-nixos-gpu.conf
+```
+
+If you switched the login shell to zsh or fish, it keeps working — those are system binaries.
+
 ## Shell
 
 A managed shell is required to source session variables into the graphical session.
@@ -62,12 +110,12 @@ This keeps login working even if Nix is later removed (both shells ship with Ste
 
 Switch to **zsh**:
 ```bash
-chsh -s /usr/bin/zsh
+chsh -s /bin/zsh
 ```
 
 Switch to **fish**:
 ```bash
-chsh -s /usr/bin/fish
+chsh -s /bin/fish
 ```
 
 Do this **before** running `home-manager switch` with the shell module enabled.
