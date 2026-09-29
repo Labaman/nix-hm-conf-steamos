@@ -19,7 +19,7 @@ Nix — один из официально поддерживаемых спос
 
 ## Использование
 
-Установить Nix, если ещё не установлен (рекомендуется использовать официальный установщик [NixOS/nix-installer](https://github.com/NixOS/nix-installer) — он автоматически определяет SteamOS и производит необходимые начальные настройки):
+Установить Nix, если он ещё не установлен. Рекомендуется официальный установщик [NixOS/nix-installer](https://github.com/NixOS/nix-installer): он сам определяет SteamOS и выполняет начальную настройку:
 
 ```bash
 curl -sSfL https://artifacts.nixos.org/nix-installer | sh -s -- install --enable-flakes
@@ -32,7 +32,7 @@ git clone https://github.com/Labaman/nix-hm-conf-steamos ~/.config/home-manager
 nix run home-manager/master -- switch
 ```
 
-Первый запуск Home Manager необходимо производить через разовый запуск `nix run` — отдельно ставить его не нужно. После этого Home Manager будет установлен в ваш профиль и команда `home-manager` будет доступна на постоянной основе. Дальше достаточно просто запускать `home-manager switch` при любых изменениях конфигурации.
+При первой активации Home Manager запускается прямо из своего флейка через `nix run`, поэтому отдельно устанавливать его не нужно. После успешной активации команда `home-manager` появится в вашем профиле, и дальше для применения любых изменений конфига достаточно `home-manager switch`.
 
 Настроить GPU-драйверы для Nix GUI-приложений (спросит пароль sudo; перезапускать, когда `switch` предупреждает, что драйверы требуют обновления):
 
@@ -44,11 +44,11 @@ nix-gpu-setup
 
 ## Обновление и обслуживание
 
-**Обновление программ.** Все пакеты берутся из зафиксированных источников (`inputs`) (nixpkgs + Home Manager) в `flake.lock`, поэтому обновить приложения — значит актуализировать эти источники и применить новый конфиг:
+**Обновление программ.** Все пакеты берутся из источников флейка (`inputs`: nixpkgs и Home Manager), зафиксированных в `flake.lock`. Чтобы обновить программы, обновите эти источники и примените конфиг заново:
 
 ```bash
 cd ~/.config/home-manager
-nix flake update      # поднять nixpkgs + home-manager до свежего коммита
+nix flake update      # обновить nixpkgs и home-manager до последнего коммита
 home-manager switch   # пересобрать и активировать обновлённые программы
 ```
 
@@ -58,25 +58,25 @@ home-manager switch   # пересобрать и активировать об�
 home-manager generations
 ```
 
-Освободить место — старые поколения хранятся до удаления, а каждый `switch` добавляет новое:
+Освободить место. Старые поколения хранятся, пока вы их не удалите, а каждый `switch` добавляет новое:
 
 ```bash
 home-manager expire-generations "-7 days"   # удалить поколения Home Manager старше 7 дней
-nix-collect-garbage --delete-older-than 7d   # удалить старые поколения профиля + несвязанные пути store
-nix store optimise                           # дедуп store через хардлинки
+nix-collect-garbage --delete-older-than 7d   # удалить старые поколения профиля и неиспользуемые пути в store
+nix store optimise                           # дедупликация store через хардлинки
 ```
 
-Очистить всё неактуальное (оставив только текущее поколение) — `nix-collect-garbage -d`.
+Удалить сразу все старые поколения, оставив только текущее, — `nix-collect-garbage -d`.
 
 ### Удаление
 
-Сначала удалите Home Manager — управляемые им файлы в домашнем каталоге являются симлинками в Nix store и иначе останутся битыми:
+Сначала удалите Home Manager: управляемые им файлы в домашнем каталоге — это симлинки в Nix store, и без этого шага они останутся битыми:
 
 ```bash
 home-manager uninstall
 ```
 
-Затем удалите сам Nix деинсталлятором установщика — см. [NixOS/nix-installer → Uninstalling](https://github.com/NixOS/nix-installer#uninstalling):
+Затем удалите сам Nix с помощью nix-installer — см. [NixOS/nix-installer → Uninstalling](https://github.com/NixOS/nix-installer#uninstalling):
 
 ```bash
 /nix/nix-installer uninstall
@@ -103,7 +103,7 @@ sudo rm /etc/tmpfiles.d/non-nixos-gpu.conf /etc/atomic-update.conf.d/non-nixos-g
 ### Смена дефолтного логин-шелла (опционально)
 
 Рекомендуется сменить дефолтный bash на zsh или fish — их модули HM развиваются активнее и отпадает необходимость в специфичных для bash костылях.
-При смене оболочки следует указывать **системный** бинарь, а не Nix-managed — тогда логин останется рабочим даже если Nix будет удалён (оба шелла идут в комплекте с SteamOS):
+При смене оболочки указывайте **системный** бинарник, а не установленный через Nix: тогда вход в систему продолжит работать, даже если удалить Nix (оба шелла идут в комплекте с SteamOS):
 
 Переключиться на **zsh**:
 ```bash
