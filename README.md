@@ -19,7 +19,7 @@ This repository is a minimal [Home Manager](https://github.com/nix-community/hom
 
 ## Usage
 
-Install Nix if not already installed. The official installer [NixOS/nix-installer](https://github.com/NixOS/nix-installer) is recommended — it detects SteamOS automatically and does the necessary initial setup:
+If Nix isn't installed yet, install it. The official installer [NixOS/nix-installer](https://github.com/NixOS/nix-installer) is recommended: it detects SteamOS automatically and handles the initial setup:
 
 ```bash
 curl -sSfL https://artifacts.nixos.org/nix-installer | sh -s -- install --enable-flakes
@@ -32,7 +32,7 @@ git clone https://github.com/Labaman/nix-hm-conf-steamos ~/.config/home-manager
 nix run home-manager/master -- switch
 ```
 
-The first Home Manager run has to go through a one-off `nix run` — no separate install needed. It installs Home Manager into your profile, so the `home-manager` command stays available from then on. After that, just run `home-manager switch` whenever you change the config.
+For the initial activation, Home Manager is run directly from its flake with `nix run`, so there's no need to install it separately. Once that has completed successfully, the `home-manager` command is available in your profile, and applying any later config change is as simple as `home-manager switch`.
 
 Set up GPU drivers for Nix GUI apps (asks for the sudo password; re-run it when `switch` warns that GPU drivers require an update):
 
@@ -44,7 +44,7 @@ Add your own packages and programs below the comment at the bottom of `home.nix`
 
 ## Updating & maintenance
 
-**Updating programs.** All packages come from the pinned sources (`inputs`: nixpkgs + Home Manager) in `flake.lock`, so updating your apps means bringing those sources up to date and applying the new config:
+**Updating programs.** All packages come from the flake inputs (nixpkgs and Home Manager) pinned in `flake.lock`. To update your apps, update those inputs and apply the config again:
 
 ```bash
 cd ~/.config/home-manager
@@ -58,7 +58,7 @@ List generations (to roll back, activate an earlier one):
 home-manager generations
 ```
 
-Free up disk space — old generations stay until removed, and every `switch` adds one:
+Free up disk space. Old generations are kept until you remove them, and each `switch` adds a new one:
 
 ```bash
 home-manager expire-generations "-7 days"   # drop Home Manager generations older than 7 days
@@ -66,7 +66,7 @@ nix-collect-garbage --delete-older-than 7d   # remove old profile generations + 
 nix store optimise                           # deduplicate the store with hard links
 ```
 
-To clean up everything stale (keeping only the current generation), use `nix-collect-garbage -d`.
+To remove all old generations at once and keep only the current one, use `nix-collect-garbage -d`.
 
 ### Uninstalling
 
@@ -76,7 +76,7 @@ Remove Home Manager first — the files it manages in your home directory are sy
 home-manager uninstall
 ```
 
-Then remove Nix itself with the installer's uninstaller — see [NixOS/nix-installer → Uninstalling](https://github.com/NixOS/nix-installer#uninstalling):
+Then uninstall Nix itself with nix-installer — see [NixOS/nix-installer → Uninstalling](https://github.com/NixOS/nix-installer#uninstalling):
 
 ```bash
 /nix/nix-installer uninstall
