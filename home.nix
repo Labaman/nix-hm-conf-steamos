@@ -94,11 +94,11 @@ in
       '';
     };
 
-  # ── Shell (required — uncomment ONE) ─────────────────────────────────────────
-  # See README for shell comparison, advantages of zsh/fish, and how to change the
-  # default login shell.
-  #
-  # programs.bash.enable = true;
+  # ── Shell ────────────────────────────────────────────────────────────────────
+  # bash (the SteamOS login shell) is enabled by default: it loads the session
+  # variables, ~/.local/bin and the prompt. To use zsh or fish instead, change the
+  # login shell first (chsh, see README), then uncomment its block.
+  programs.bash.enable = true;
   #
   # programs.zsh = {
   #   enable = true;
