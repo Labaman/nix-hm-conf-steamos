@@ -14,6 +14,7 @@ Nix — один из официально поддерживаемых спос
 | Обновление меню KDE | Иконки Nix-приложений появляются в лаунчере сразу после `switch`, без перезахода в сессию (при первом switch иконки могут быть пустыми, но приложения запускаются). Также предотвращает исчезновение системных приложений из меню. |
 | GPU для Nix GUI-приложений | `targets.genericLinux.gpu`: драйверы mesa (OpenGL + Vulkan/RADV) через `/run/opengl-driver`, без обёрток на приложения; `nix-gpu-setup` сохраняет настройку при обновлениях SteamOS |
 | Нативный Wayland для Nix-GUI-приложений | `NIXOS_OZONE_WL` для Electron/Chromium-приложений (Qt выбирает Wayland сам) |
+| Закреплённый `nixpkgs` | `nix shell nixpkgs#…` и `nix-shell -p` используют тот же nixpkgs, что и конфиг |
 | EmuDeck / rustup | Изменяемый `~/.gitconfig` рядом с управляемым HM git-конфигом |
 | Строка приглашения оболочки (Starship) | Единый вид для bash, zsh и fish в стиле дефолтного SteamOS: `(user@host dir) [ветка*]$` |
 

@@ -14,6 +14,7 @@ This repository is a minimal [Home Manager](https://github.com/nix-community/hom
 | KDE app menu update | Nix app icons appear in the launcher right after `switch` without a relogin (icons may be blank on first switch, but are present). Also prevents system apps from vanishing after switch. |
 | GPU for Nix GUI apps | `targets.genericLinux.gpu`: mesa drivers (OpenGL + Vulkan/RADV) via `/run/opengl-driver`, no per-app wrappers; `nix-gpu-setup` keeps it across SteamOS updates |
 | Native Wayland for Nix GUI apps | `NIXOS_OZONE_WL` for Electron/Chromium apps (Qt picks Wayland itself) |
+| Pinned `nixpkgs` | `nix shell nixpkgs#…` and `nix-shell -p` use the same nixpkgs as the config |
 | EmuDeck / rustup | Writable `~/.gitconfig` alongside HM-managed git config |
 | Shell prompt (Starship) | Consistent SteamOS-style prompt across bash, zsh, and fish: `(user@host dir) [branch*]$` |
 
