@@ -13,7 +13,7 @@ This repository is a minimal [Home Manager](https://github.com/nix-community/hom
 | XDG_DATA_DIRS order | Keeps Flatpak ahead of system stubs in the KDE menu (HM [#8076](https://github.com/nix-community/home-manager/issues/8076) / [#9356](https://github.com/nix-community/home-manager/pull/9356)) |
 | KDE app menu update | Nix app icons appear in the launcher right after `switch` without a relogin (icons may be blank on first switch, but are present). Also prevents system apps from vanishing after switch. |
 | GPU for Nix GUI apps | `targets.genericLinux.gpu`: mesa drivers (OpenGL + Vulkan/RADV) via `/run/opengl-driver`, no per-app wrappers; `nix-gpu-setup` keeps it across SteamOS updates |
-| Native Wayland for Nix GUI apps | `NIXOS_OZONE_WL` + `QT_QPA_PLATFORM` for Electron/Qt apps |
+| Native Wayland for Nix GUI apps | `NIXOS_OZONE_WL` for Electron/Chromium apps (Qt picks Wayland itself) |
 | EmuDeck / rustup | Writable `~/.gitconfig` alongside HM-managed git config |
 | Shell prompt (Starship) | Consistent SteamOS-style prompt across bash, zsh, and fish: `(user@host dir) [branch*]$` |
 

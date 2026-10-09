@@ -13,7 +13,7 @@ Nix — один из официально поддерживаемых спос
 | Порядок XDG_DATA_DIRS | Flatpak остаётся первым в меню KDE — без этого вместо Flatpak-приложений (Firefox и др.) открывается системный стаб «Install Firefox» (HM [#8076](https://github.com/nix-community/home-manager/issues/8076) / [#9356](https://github.com/nix-community/home-manager/pull/9356)) |
 | Обновление меню KDE | Иконки Nix-приложений появляются в лаунчере сразу после `switch`, без перезахода в сессию (при первом switch иконки могут быть пустыми, но приложения запускаются). Также предотвращает исчезновение системных приложений из меню. |
 | GPU для Nix GUI-приложений | `targets.genericLinux.gpu`: драйверы mesa (OpenGL + Vulkan/RADV) через `/run/opengl-driver`, без обёрток на приложения; `nix-gpu-setup` сохраняет настройку при обновлениях SteamOS |
-| Нативный Wayland для Nix-GUI-приложений | `NIXOS_OZONE_WL` + `QT_QPA_PLATFORM` для Electron/Qt-приложений |
+| Нативный Wayland для Nix-GUI-приложений | `NIXOS_OZONE_WL` для Electron/Chromium-приложений (Qt выбирает Wayland сам) |
 | EmuDeck / rustup | Изменяемый `~/.gitconfig` рядом с управляемым HM git-конфигом |
 | Строка приглашения оболочки (Starship) | Единый вид для bash, zsh и fish в стиле дефолтного SteamOS: `(user@host dir) [ветка*]$` |
 
