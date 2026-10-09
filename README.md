@@ -95,8 +95,7 @@ If you switched the login shell to zsh or fish, it keeps working — those are s
 
 ## Shell
 
-A managed shell is required to source session variables into the graphical session.
-Uncomment one of the shell blocks in `home.nix`.
+bash — the SteamOS login shell — is enabled in `home.nix` by default, so session variables, `~/.local/bin` in `PATH` and the prompt work right after the first `switch`. Your existing `~/.bashrc` and `~/.bash_profile` are renamed to `*.hm-backup`; move any custom lines into `programs.bash.initExtra`.
 
 | Shell | Session env coverage | Notes |
 |-------|----------------------|-------|
@@ -104,7 +103,7 @@ Uncomment one of the shell blocks in `home.nix`.
 | **zsh** | login, interactive & non-interactive | `.zshenv` is sourced for every zsh invocation, so session vars always load without any workarounds. Does not touch bash dotfiles. The `# bash only` entries in `home.nix` may be removed. |
 | **fish** | login, interactive & non-interactive | Autocompletion, command suggestions, and syntax highlighting work out of the box without extra config. Does not touch bash dotfiles. The `# bash only` entries may be removed. Note: fish syntax is not POSIX/bash-compatible — bash scripts won't run directly inside fish. |
 
-### Changing the default login shell (optional)
+### Using zsh or fish instead (optional)
 
 Switching from the default bash to zsh or fish is recommended — their HM modules are more actively developed, and the bash-specific workarounds become unnecessary.
 
@@ -121,5 +120,5 @@ Switch to **fish**:
 chsh -s /bin/fish
 ```
 
-Do this **before** running `home-manager switch` with the shell module enabled.
-After re-login, uncomment the corresponding shell block in `home.nix`.
+Changing the login shell is **required**: a Home Manager shell module only takes effect for the shell you log in with.
+Run `chsh` first, log out and back in, then uncomment the corresponding block in `home.nix` and run `home-manager switch`. The bash block can stay enabled.
