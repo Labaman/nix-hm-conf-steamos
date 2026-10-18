@@ -101,28 +101,21 @@ bash — the SteamOS login shell — is enabled in `home.nix` by default, so ses
 
 | Shell | Session env coverage | Notes |
 |-------|----------------------|-------|
-| **bash** | login + interactive shells | SteamOS default; no need to change the login shell. The two `# bash only` entries in `home.nix` cover the non-interactive startup gap. |
-| **zsh** | login, interactive & non-interactive | `.zshenv` is sourced for every zsh invocation, so session vars always load without any workarounds. Does not touch bash dotfiles. The `# bash only` entries in `home.nix` may be removed. |
-| **fish** | login, interactive & non-interactive | Autocompletion, command suggestions, and syntax highlighting work out of the box without extra config. Does not touch bash dotfiles. The `# bash only` entries may be removed. Note: fish syntax is not POSIX/bash-compatible — bash scripts won't run directly inside fish. |
+| **bash** | login + interactive shells | SteamOS default; no need to change the login shell. The two `# bash only` entries in `home.nix` cover what bash alone misses: `XDG_DATA_DIRS` duplicates in `.bashrc` and `NIXOS_OZONE_WL` for apps launched from the KDE menu. |
+| **zsh** | login, interactive & non-interactive | Session vars load in every zsh — login shells via `.zprofile`, others via `.zshenv`. Does not touch bash dotfiles. |
+| **fish** | login, interactive & non-interactive | Autocompletion, command suggestions, and syntax highlighting work out of the box without extra config. Does not touch bash dotfiles. Note: fish syntax is not POSIX/bash-compatible — bash scripts won't run directly inside fish. |
 
 ### Using zsh or fish instead (optional)
 
-Switching from the default bash to zsh or fish is recommended — their HM modules are more actively developed, and the bash-specific workarounds become unnecessary.
+bash works out of the box, so switching is a matter of taste: the fixes in `home.nix` work the same in every shell, and the two bash-only entries do nothing once bash is off.
 
-To use zsh or fish, switch to the **system-provided** binary — not the Nix-managed one.
-This keeps login working even if Nix is later removed (both shells ship with SteamOS):
+1. Uncomment the block for your shell in `home.nix` and run `home-manager switch`.
+2. Change the login shell. Use the **system-provided** binary, not the Nix-managed one: login keeps working even if Nix is later removed (both shells ship with SteamOS):
 
-Switch to **zsh**:
+   ```bash
+   chsh -s /bin/zsh    # or: chsh -s /bin/fish
+   ```
 
-```bash
-chsh -s /bin/zsh
-```
+3. Log out and back in: SteamOS starts the desktop session and new Konsole windows with your login shell.
 
-Switch to **fish**:
-
-```bash
-chsh -s /bin/fish
-```
-
-Changing the login shell is **required**: a Home Manager shell module only takes effect for the shell you log in with.
-Run `chsh` first, log out and back in, then uncomment the corresponding block in `home.nix` and run `home-manager switch`. The bash block can stay enabled.
+The bash block can stay enabled for bash sessions, or you can comment it out.
