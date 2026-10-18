@@ -97,7 +97,7 @@ If you switched the login shell to zsh or fish, it keeps working — those are s
 
 ## Shell
 
-bash — the SteamOS login shell — is enabled in `home.nix` by default, so session variables, `~/.local/bin` in `PATH` and the prompt work right after the first `switch`. Your existing `~/.bashrc` and `~/.bash_profile` are renamed to `*.hm-backup`; move your settings from them into the `programs.bash` module options, or into `programs.bash.initExtra` if there's no matching option.
+Home Manager writes session variables (including `~/.local/bin` in `PATH`) to `hm-session-vars.sh`, which only a Home Manager-managed shell loads. The SteamOS login shell is bash, so `programs.bash` is enabled in `home.nix` by default — open a new terminal after the first `switch`. Your existing `~/.bashrc` and `~/.bash_profile` are renamed to `*.hm-backup`; move your settings into the `programs.bash` options or the slot for your own lines in `programs.bash.initExtra`.
 
 | Shell | Session env coverage | Notes |
 |-------|----------------------|-------|

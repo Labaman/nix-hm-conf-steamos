@@ -97,7 +97,7 @@ sudo rm /etc/tmpfiles.d/non-nixos-gpu.conf /etc/atomic-update.conf.d/non-nixos-g
 
 ## Оболочка
 
-bash — оболочка входа SteamOS — включён в `home.nix` по умолчанию, поэтому переменные сессии, `~/.local/bin` в `PATH` и строка приглашения работают сразу после первого `switch`. Существующие `~/.bashrc` и `~/.bash_profile` переименовываются в `*.hm-backup`; свои настройки из них перенесите в опции модуля `programs.bash`, а если подходящей опции нет — в `programs.bash.initExtra`.
+Home Manager записывает переменные сессии (в том числе `~/.local/bin` в `PATH`) в `hm-session-vars.sh`, а подключает его только оболочка под управлением Home Manager. Оболочка входа в SteamOS — bash, поэтому `programs.bash` в `home.nix` включён по умолчанию: после первого `switch` откройте новое окно терминала. Существующие `~/.bashrc` и `~/.bash_profile` переименовываются в `*.hm-backup`; свои настройки из них перенесите в опции `programs.bash` или в заготовку для своих строк в `programs.bash.initExtra`.
 
 | Оболочка | Покрытие переменных сессии | Примечания |
 |----------|---------------------------|------------|
