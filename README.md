@@ -110,10 +110,18 @@ bash — the SteamOS login shell — is enabled in `home.nix` by default, so ses
 bash works out of the box, so switching is a matter of taste: the fixes in `home.nix` work the same in every shell, and the two bash-only entries do nothing once bash is off.
 
 1. Uncomment the block for your shell in `home.nix` and run `home-manager switch`.
-2. Change the login shell. Use the **system-provided** binary, not the Nix-managed one: login keeps working even if Nix is later removed (both shells ship with SteamOS):
+2. Change the login shell. Use the **system-provided** binary, not the Nix-managed one: login keeps working even if Nix is later removed (both shells ship with SteamOS).
+
+   For **zsh**:
 
    ```bash
-   chsh -s /bin/zsh    # or: chsh -s /bin/fish
+   chsh -s /bin/zsh
+   ```
+
+   For **fish**:
+
+   ```bash
+   chsh -s /bin/fish
    ```
 
 3. Log out and back in: SteamOS starts the desktop session and new Konsole windows with your login shell.
