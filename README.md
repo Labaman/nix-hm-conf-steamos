@@ -45,7 +45,7 @@ Set up GPU drivers for Nix GUI apps (asks for the sudo password; re-run it when 
 nix-gpu-setup
 ```
 
-Add your own packages and programs below the comment at the bottom of `home.nix`.
+Add your own packages and programs to `home.nix`, below the `# Add your own packages here` comment.
 
 ## Updating & maintenance
 

@@ -45,7 +45,7 @@ nix run home-manager/master -- switch
 nix-gpu-setup
 ```
 
-Свои пакеты и программы добавляйте внутри `home.nix` ниже соответствующего комментария.
+Свои пакеты и программы добавляйте в `home.nix` под комментарием `# Add your own packages here`.
 
 ## Обновление и обслуживание
 
