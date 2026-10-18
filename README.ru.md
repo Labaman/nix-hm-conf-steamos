@@ -10,17 +10,17 @@ Nix — один из официально поддерживаемых спос
 
 | Фикс / Фича | Описание |
 |-------------|----------|
-| Порядок XDG_DATA_DIRS | Flatpak остаётся первым в меню KDE — без этого вместо Flatpak-приложений (Firefox и др.) открывается системный стаб «Install Firefox» (HM [#8076](https://github.com/nix-community/home-manager/issues/8076) / [#9356](https://github.com/nix-community/home-manager/pull/9356)) |
+| Порядок XDG_DATA_DIRS | Сохраняется исходный порядок путей в `XDG_DATA_DIRS` (Flatpak первым). Без этого Flatpak-приложения могут не отображаться в меню или не открываться: вместо них запускаются системные заглушки из read-only раздела SteamOS (например, «Install Firefox») (HM [#8076](https://github.com/nix-community/home-manager/issues/8076) / [#9356](https://github.com/nix-community/home-manager/pull/9356)) |
 | Обновление меню KDE | Иконки Nix-приложений появляются в лаунчере сразу после `switch`, без перезахода в сессию (при первом switch иконки могут быть пустыми, но приложения запускаются). Также предотвращает исчезновение системных приложений из меню. |
 | GPU для Nix GUI-приложений | `targets.genericLinux.gpu`: драйверы mesa (OpenGL + Vulkan/RADV) через `/run/opengl-driver`, без обёрток на приложения; `nix-gpu-setup` сохраняет настройку при обновлениях SteamOS |
 | Нативный Wayland для Nix-GUI-приложений | `NIXOS_OZONE_WL` для Electron/Chromium-приложений (Qt выбирает Wayland сам) |
 | Закреплённый `nixpkgs` | `nix shell nixpkgs#…` и `nix-shell -p` используют тот же nixpkgs, что и конфиг |
 | EmuDeck / rustup | Изменяемый `~/.gitconfig` рядом с управляемым HM git-конфигом |
-| Строка приглашения оболочки (Starship) | Единый вид для bash, zsh и fish в стиле дефолтного SteamOS: `(user@host dir) [ветка*]$` |
+| Строка приглашения оболочки (Starship) | Единый вид приглашения оболочки для bash, zsh и fish в стиле дефолтного SteamOS: `(user@host dir) [ветка*]$` |
 
 ## Использование
 
-Установить Nix, если он ещё не установлен. Рекомендуется официальный установщик [NixOS/nix-installer](https://github.com/NixOS/nix-installer): он сам определяет SteamOS и выполняет начальную настройку:
+Установите Nix, если он ещё не установлен. Рекомендуется официальный установщик [NixOS/nix-installer](https://github.com/NixOS/nix-installer): он сам определяет SteamOS и выполняет начальную настройку:
 
 ```bash
 curl -sSfL https://artifacts.nixos.org/nix-installer | sh -s -- install --enable-flakes
@@ -97,11 +97,11 @@ sudo rm /etc/tmpfiles.d/non-nixos-gpu.conf /etc/atomic-update.conf.d/non-nixos-g
 
 ## Оболочка
 
-bash — оболочка входа SteamOS — включён в `home.nix` по умолчанию, поэтому переменные сессии, `~/.local/bin` в `PATH` и строка приглашения работают сразу после первого `switch`. Существующие `~/.bashrc` и `~/.bash_profile` переименовываются в `*.hm-backup`; свои строки из них перенесите в `programs.bash.initExtra`.
+bash — оболочка входа SteamOS — включён в `home.nix` по умолчанию, поэтому переменные сессии, `~/.local/bin` в `PATH` и строка приглашения работают сразу после первого `switch`. Существующие `~/.bashrc` и `~/.bash_profile` переименовываются в `*.hm-backup`; свои настройки из них перенесите в опции модуля `programs.bash`, а если подходящей опции нет — в `programs.bash.initExtra`.
 
 | Оболочка | Покрытие переменных сессии | Примечания |
 |----------|---------------------------|------------|
-| **bash** | login + интерактивные шеллы | Дефолт SteamOS; проще всего начать. Две строки `# bash only` в `home.nix` закрывают брешь в non-interactive запусках. |
+| **bash** | login + интерактивные шеллы | Дефолт SteamOS; не требует смены оболочки. Две строки `# bash only` в `home.nix` закрывают брешь в non-interactive запусках. |
 | **zsh** | login, интерактивный и non-interactive | `.zshenv` сорсится при каждом запуске zsh — переменные сессии загружаются всегда, без доп. костылей. Не трогает bash-дотфайлы. Строки `# bash only` можно удалить. |
 | **fish** | login, интерактивный и non-interactive | Автодополнение, подсказки команд и подсветка синтаксиса работают из коробки без доп. настройки. Не трогает bash-дотфайлы. Строки `# bash only` можно удалить. Важно: fish не совместим с POSIX/bash — bash-скрипты не запустятся напрямую внутри fish. |
 
@@ -111,11 +111,13 @@ bash — оболочка входа SteamOS — включён в `home.nix` п
 При смене оболочки указывайте **системный** бинарник, а не установленный через Nix: тогда вход в систему продолжит работать, даже если удалить Nix (оба шелла идут в комплекте с SteamOS):
 
 Переключиться на **zsh**:
+
 ```bash
 chsh -s /bin/zsh
 ```
 
 Переключиться на **fish**:
+
 ```bash
 chsh -s /bin/fish
 ```
