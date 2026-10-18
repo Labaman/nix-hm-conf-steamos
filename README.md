@@ -10,7 +10,7 @@ This repository is a minimal [Home Manager](https://github.com/nix-community/hom
 
 | Fix / Feature | Notes |
 |---------------|-------|
-| XDG_DATA_DIRS order | Keeps Flatpak ahead of system stubs in the KDE menu (HM [#8076](https://github.com/nix-community/home-manager/issues/8076) / [#9356](https://github.com/nix-community/home-manager/pull/9356)) |
+| XDG_DATA_DIRS order | Keeps the original `XDG_DATA_DIRS` order (Flatpak first). Otherwise Flatpak apps may be missing from the menu or fail to open, and read-only SteamOS stubs (e.g. "Install Firefox") launch instead (HM [#8076](https://github.com/nix-community/home-manager/issues/8076) / [#9356](https://github.com/nix-community/home-manager/pull/9356)) |
 | KDE app menu update | Nix app icons appear in the launcher right after `switch` without a relogin (icons may be blank on first switch, but are present). Also prevents system apps from vanishing after switch. |
 | GPU for Nix GUI apps | `targets.genericLinux.gpu`: mesa drivers (OpenGL + Vulkan/RADV) via `/run/opengl-driver`, no per-app wrappers; `nix-gpu-setup` keeps it across SteamOS updates |
 | Native Wayland for Nix GUI apps | `NIXOS_OZONE_WL` for Electron/Chromium apps (Qt picks Wayland itself) |
@@ -97,11 +97,11 @@ If you switched the login shell to zsh or fish, it keeps working — those are s
 
 ## Shell
 
-bash — the SteamOS login shell — is enabled in `home.nix` by default, so session variables, `~/.local/bin` in `PATH` and the prompt work right after the first `switch`. Your existing `~/.bashrc` and `~/.bash_profile` are renamed to `*.hm-backup`; move any custom lines into `programs.bash.initExtra`.
+bash — the SteamOS login shell — is enabled in `home.nix` by default, so session variables, `~/.local/bin` in `PATH` and the prompt work right after the first `switch`. Your existing `~/.bashrc` and `~/.bash_profile` are renamed to `*.hm-backup`; move your settings from them into the `programs.bash` module options, or into `programs.bash.initExtra` if there's no matching option.
 
 | Shell | Session env coverage | Notes |
 |-------|----------------------|-------|
-| **bash** | login + interactive shells | SteamOS default; simplest to start with. The two `# bash only` entries in `home.nix` cover the non-interactive startup gap. |
+| **bash** | login + interactive shells | SteamOS default; no need to change the login shell. The two `# bash only` entries in `home.nix` cover the non-interactive startup gap. |
 | **zsh** | login, interactive & non-interactive | `.zshenv` is sourced for every zsh invocation, so session vars always load without any workarounds. Does not touch bash dotfiles. The `# bash only` entries in `home.nix` may be removed. |
 | **fish** | login, interactive & non-interactive | Autocompletion, command suggestions, and syntax highlighting work out of the box without extra config. Does not touch bash dotfiles. The `# bash only` entries may be removed. Note: fish syntax is not POSIX/bash-compatible — bash scripts won't run directly inside fish. |
 
@@ -113,11 +113,13 @@ To use zsh or fish, switch to the **system-provided** binary — not the Nix-man
 This keeps login working even if Nix is later removed (both shells ship with SteamOS):
 
 Switch to **zsh**:
+
 ```bash
 chsh -s /bin/zsh
 ```
 
 Switch to **fish**:
+
 ```bash
 chsh -s /bin/fish
 ```
